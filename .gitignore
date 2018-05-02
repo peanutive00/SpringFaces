@@ -1,0 +1,7 @@
+target/*
+.project
+.classpath
+faces-config.NavData
+nb-configuration.xml
+/target/
+/nbproject/
