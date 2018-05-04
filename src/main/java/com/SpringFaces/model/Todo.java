@@ -1,12 +1,13 @@
 package com.SpringFaces.model;
 
-import java.sql.Date;
+import java.util.Date;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.Id;
 import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
+import javax.persistence.Transient;
 
 @Entity
 @Table(name = "todo")
@@ -16,6 +17,8 @@ public class Todo {
     private String jobName;
     private String jobDescription;
     private java.sql.Date targetDate;
+    
+    private boolean selected = false;
 
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -55,5 +58,14 @@ public class Todo {
         if(targetDate != null)
             this.targetDate = new java.sql.Date(targetDate.getTime());
     }
+    
+    @Transient
+    public boolean isSelected() {
+        return selected;
+    }
 
+    public void setSelected(boolean selected) {
+        this.selected = selected;
+    }
+    
 }

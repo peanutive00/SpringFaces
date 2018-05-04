@@ -18,14 +18,15 @@ public class TodoDaoImpl implements TodoDao {
     
     @Override
     public void persitTodo(Todo todo) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        this.sessionFactory.getCurrentSession()
+                           .save(todo);
     }
 
     @Override
     public List<Todo> findTodo() {
-        List<Todo> result = (List<Todo>) sessionFactory.getCurrentSession()
-                                                       .createCriteria(Todo.class)
-                                                       .setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY).list();
+        List<Todo> result = (List<Todo>) this.sessionFactory.getCurrentSession()
+                                                            .createCriteria(Todo.class)
+                                                            .setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY).list();
         return result;
     }
 
@@ -41,7 +42,7 @@ public class TodoDaoImpl implements TodoDao {
 
     @Override
     public void removeTodo(Todo todo) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        this.sessionFactory.getCurrentSession().delete(todo);
     }
     
 }

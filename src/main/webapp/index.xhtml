@@ -26,7 +26,10 @@
             <h1><h:outputText value="Todo"/></h1>
         </p:panel>
 
-        <h:form>
+        <h:form id="viewAllJobForm">
+            <p:panel style="border: none">
+                <p:commandButton value="Create New Job" onclick="PF('createTodoDlg').show();" style="float: right"/>
+            </p:panel>
             <p:panel style="border: none; margin: auto">
                 <p:panelGrid style="width: 100%">
                     <p:row>
@@ -35,7 +38,7 @@
                                 <u><h:outputText value="Job Name"/></u>
                             </p:panel>
                         </p:column>
-                        <p:column width="50%">
+                        <p:column width="40%">
                             <p:panel style="border: none">
                                 <u><h:outputText value="Job Description"/></u>
                             </p:panel>
@@ -46,9 +49,13 @@
                             </p:panel>
                         </p:column>
                         <p:column width="10%">
-                            <p:panel style="border: none; display: block">
-                                <h:outputText value="Select all / Deselect all"/>
-                                <u><p:selectBooleanCheckbox value="#{todoBean.selectAll}"/></u>
+                            <p:panel style="border: none">
+                                <u><h:outputText value="Update"/></u>
+                            </p:panel>
+                        </p:column>
+                        <p:column width="10%">
+                            <p:panel style="border: none; display: block; text-align: center">
+                                <p:commandButton value="Select all / Deselect all" action="#{todoBean.selectAllJobListener}" update="viewAllJobForm"/>
                             </p:panel>
                         </p:column>
                     </p:row>
@@ -57,14 +64,21 @@
                             <p:column width="20%">
                                 <p:panel style="border: none"><h:outputText value="#{todo.jobName}"/></p:panel>
                             </p:column>
-                            <p:column width="50%">
+                            <p:column width="40%">
                                 <p:panel style="border: none"><h:outputText value="#{todo.jobDescription}"/></p:panel>
                             </p:column>
                             <p:column width="20%">
                                 <p:panel style="border: none"><h:outputText value="#{todo.targetDate}"/></p:panel>
                             </p:column>
                             <p:column width="10%">
-                                <p:panel style="border: none"><p:selectBooleanCheckbox /></p:panel>
+                                <p:panel style="border: none">
+                                    <p:commandButton  icon="fas fa-sync" update="updateTodoForm" onclick="PF('updateTodoDlg').show();">
+                                        <f:setPropertyActionListener value="#{todo}" target="#{todoBean.oldTodo}"/>
+                                    </p:commandButton>
+                                </p:panel>
+                            </p:column>
+                            <p:column width="10%">
+                                <p:panel style="border: none; text-align: center"><p:selectBooleanCheckbox value="#{todo.selected}"/></p:panel>
                             </p:column>
                         </p:row>
                     </ui:repeat>
@@ -78,6 +92,73 @@
                 </p:panelGrid>
             </p:panel>
         </h:form>
+
+        <p:dialog header="Create Todo Dialog" widgetVar="createTodoDlg" modal="true" closable="false" draggable="false" resizable="false" width="550" height="400">
+            <h:form id="createTodoForm">
+                <p:growl id="createTodoForm_msg_error" severity="error" showDetail="true"/>
+
+                <p:panelGrid columns="2">
+                    <h:outputText value="New job name"/>
+                    <p:inputText id="createNewJobName" value="#{todoBean.todo.jobName}" required="true" requiredMessage="Create Todo Dialog's new job name field is empty." validatorMessage="Only allow charaters and numbers and space input.">
+                        <p:ajax event="blur" update="createNewJobName"/>
+                        <f:validateRegex pattern="[A-Za-z0-9 ]+|()"/>
+                    </p:inputText>
+
+                    <h:outputText value="New job description"/>
+                    <p:inputText id="createNewJobDescription" value="#{todoBean.todo.jobDescription}" validatorMessage="Only allow charaters and numbers and space input.">
+                        <p:ajax event="blur" update="createNewJobDescription"/>
+                        <f:validateRegex pattern="[A-Za-z0-9 ]+|()"/>
+                    </p:inputText>
+
+                    <h:outputText value="Target date"/>
+                    <p:calendar id="createNewJobTargetDate" value="#{todoBean.todo.targetDate}" mindate="#{todoBean.minDate}" mode="inline" pattern="yyyy-MM-dd" required="true" requiredMessage="Create Todo Dialog's target date is not selected."/>
+                </p:panelGrid>
+                <br/>
+                <br/>
+                <p:commandButton value="Create" action="#{todoBean.createTodo}" update="createTodoForm viewAllJobForm" process="createTodoForm" style="float: right"/>
+                <p:commandButton value="Cancel" onclick="PF('createTodoDlg').hide();" style="float: left"/>
+            </h:form>
+        </p:dialog>
+
+        <p:dialog header="Update Todo Dialog" widgetVar="updateTodoDlg" modal="true" closable="false" draggable="false" resizable="false" width="1050" height="400">
+            <h:form id="updateTodoForm">
+                <p:growl id="updateTodoForm_msg_error" severity="error" showDetail="true"/>
+
+                <p:panelGrid columns="2">
+                    <h:outputText value="Old job name"/>
+                    <h:outputText value="#{todoBean.oldTodo.jobName}"/>
+
+                    <h:outputText value="Old job description"/>
+                    <h:outputText value="#{todoBean.oldTodo.jobDescription}"/>
+
+                    <h:outputText value="Old job target date"/>
+                    <h:outputText value="#{todoBean.oldTodo.targetDate}"/>
+                </p:panelGrid>
+
+                <p:panelGrid columns="2">
+                    <h:outputText value="New job name"/>
+                    <p:inputText id="updateNewJobName" value="#{todoBean.todo.jobName}" required="true" requiredMessage="Create Todo Dialog's new job name field is empty." validatorMessage="Only allow charaters and numbers and space input.">
+                        <p:ajax event="blur" update="updateNewJobName"/>
+                        <f:validateRegex pattern="[A-Za-z0-9 ]+|()"/>
+                    </p:inputText>
+
+                    <h:outputText value="New job description"/>
+                    <p:inputText id="updateNewJobDescription" value="#{todoBean.todo.jobName}" validatorMessage="Only allow charaters and numbers and space input.">
+                        <p:ajax event="blur" update="updateNewJobDescription"/>
+                        <f:validateRegex pattern="[A-Za-z0-9 ]+|()"/>
+                    </p:inputText>
+
+                    <h:outputText value="Target date"/>
+                    <p:calendar id="updateNewJobTargetDate" value="#{todoBean.todo.targetDate}" mindate="#{todoBean.minDate}" mode="inline" pattern="yyyy-MM-dd" required="true" requiredMessage="Create Todo Dialog's target date is not selected."/>
+                </p:panelGrid>
+                <br/>
+                <br/>
+                <p:panel style="border: none; width: 100%">
+                    <p:commandButton value="Update" action="#{todoBean.updateTodo}" update="updateTodoForm viewAllJobForm" process="updateTodoForm" style="float: right"/>
+                    <p:commandButton value="Cancel" onclick="PF('updateTodoDlg').hide();" style="float: left"/>
+                </p:panel>
+            </h:form>
+        </p:dialog>
 
     </h:body>
 </html>
