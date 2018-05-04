@@ -52,7 +52,7 @@
                             </p:panel>
                         </p:column>
                     </p:row>
-                    <ui:repeat value="#{todoBean.list}" var="todo" rendered="#{todoBean.list.size() != 0}">
+                    <ui:repeat value="#{todoBean.list}" var="todo" rendered="#{todoBean.list != null &amp;&amp; todoBean.list.size() != 0}">
                         <p:row>
                             <p:column width="20%">
                                 <p:panel style="border: none"><h:outputText value="#{todo.jobName}"/></p:panel>
@@ -68,6 +68,13 @@
                             </p:column>
                         </p:row>
                     </ui:repeat>
+                    <p:row rendered="#{todoBean.list == null || todoBean.list.size() == 0}">
+                        <p:column width="100%">
+                            <p:panel style="border: none">
+                                <h:outputText value="No job created."/>
+                            </p:panel>
+                        </p:column>
+                    </p:row>
                 </p:panelGrid>
             </p:panel>
         </h:form>
