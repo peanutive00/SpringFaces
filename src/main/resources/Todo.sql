@@ -1,0 +1,9 @@
+CREATE DATABASE IF NOT EXISTS `test`;
+
+CREATE TABLE `Todo`(
+	`id` INT NOT NULL AUTO_INCREMENT,
+	`job_name` VARCHAR(255) NOT NULL,
+	`job_description` VARCHAR(255) NULL,
+	`target_date` DATE NOT NULL,
+	PRIMARY KEY(`id`)
+)AUTO_INCREMENT=1;

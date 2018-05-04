@@ -12,9 +12,65 @@
     <h:head>
         <title>Spring Faces</title>
     </h:head>
-    <h:body>
+
+    <style>
+        .ui-panelgrid td, .ui-panelgrid tr
+        {
+            border-style: none !important
+        }
+    </style>
+
+    <h:body style="margin: 0">
+
+        <p:panel style="border-bottom: 1px solid black">
+            <h1><h:outputText value="Todo"/></h1>
+        </p:panel>
+
         <h:form>
-            <p:outputLabel value="#{helloWorldBean.helloMessage}"/>
+            <p:panel style="border: none; margin: auto">
+                <p:panelGrid style="width: 100%">
+                    <p:row>
+                        <p:column width="20%">
+                            <p:panel style="border: none" >
+                                <u><h:outputText value="Job Name"/></u>
+                            </p:panel>
+                        </p:column>
+                        <p:column width="50%">
+                            <p:panel style="border: none">
+                                <u><h:outputText value="Job Description"/></u>
+                            </p:panel>
+                        </p:column>
+                        <p:column width="20%">
+                            <p:panel style="border: none">
+                                <u><h:outputText value="Target Date"/></u>
+                            </p:panel>
+                        </p:column>
+                        <p:column width="10%">
+                            <p:panel style="border: none; display: block">
+                                <h:outputText value="Select all / Deselect all"/>
+                                <u><p:selectBooleanCheckbox value="#{todoBean.selectAll}"/></u>
+                            </p:panel>
+                        </p:column>
+                    </p:row>
+                    <ui:repeat value="#{todoBean.list}" var="todo" rendered="#{todoBean.list.size() != 0}">
+                        <p:row>
+                            <p:column width="20%">
+                                <p:panel style="border: none"><h:outputText value="#{todo.jobName}"/></p:panel>
+                            </p:column>
+                            <p:column width="50%">
+                                <p:panel style="border: none"><h:outputText value="#{todo.jobDescription}"/></p:panel>
+                            </p:column>
+                            <p:column width="20%">
+                                <p:panel style="border: none"><h:outputText value="#{todo.targetDate}"/></p:panel>
+                            </p:column>
+                            <p:column width="10%">
+                                <p:panel style="border: none"><p:selectBooleanCheckbox /></p:panel>
+                            </p:column>
+                        </p:row>
+                    </ui:repeat>
+                </p:panelGrid>
+            </p:panel>
         </h:form>
+
     </h:body>
 </html>
