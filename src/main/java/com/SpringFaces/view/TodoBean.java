@@ -1,38 +1,38 @@
 package com.SpringFaces.view;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Calendar;
 import javax.annotation.PostConstruct;
 
 import org.springframework.stereotype.Component;
 import org.springframework.context.annotation.Scope;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import org.primefaces.context.RequestContext;
+
 import com.SpringFaces.model.Todo;
 import com.SpringFaces.service.TodoService;
-import java.io.Serializable;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Locale;
-import org.primefaces.context.RequestContext;
 
 @Component
 @Scope("view")
 public class TodoBean implements Serializable {
 
     private static final long serialVersionUID = 475918891428093041L;
-    
+
     @Autowired
     private TodoService todoService;
-
-    private List<Todo> list;
     
+    private String filterBy;
+    
+    private List<Todo> list;
+
     private Todo todo;
 
     private Todo oldTodo;
-    
+
     private boolean selectAll;
 
     @PostConstruct
@@ -46,54 +46,82 @@ public class TodoBean implements Serializable {
             ex.printStackTrace();
         }
     }
-    
-    public void createTodo(){
-        try{
+
+    public void createTodo() {
+        try {
             this.todoService.createTodo(todo);
             this.init();
             RequestContext.getCurrentInstance().execute("PF('createTodoDlg').hide();");
-        }catch(Exception ex){
+        } catch (Exception ex) {
             System.out.println(ex.getMessage());
             ex.printStackTrace();
         }
     }
-    
-    public void updateTodo(){
-        try{
+
+    public void updateTodo() {
+        try {
             
-        }catch(Exception ex){
+            if(!this.oldTodo.getJobName().equals(this.todo.getJobName())){
+                this.oldTodo.setJobName(this.todo.getJobName());
+            }
+            
+            if(!this.oldTodo.getJobDescription().equals(this.todo.getJobDescription())){
+                this.oldTodo.setJobDescription(this.todo.getJobDescription());
+            }
+            
+            if(!this.oldTodo.getJobName().equals(this.todo.getTargetDate())){
+                this.oldTodo.setTargetDate(this.todo.getTargetDate());
+            }
+            
+            this.todoService.updateTodo(todo);
+            
+        } catch (Exception ex) {
             System.out.println(ex.getMessage());
             ex.printStackTrace();
         }
     }
-    
-    public void deleteTodo(){
-        try{
-            for(Todo t : this.list){
-               this.todoService.deleteTodo(todo);
+
+    public void deleteTodo() {
+        try {
+            for (Todo t : this.list) {
+                if (t.isSelected()) {
+                    this.todoService.deleteTodo(todo);
+                }
             }
             this.init();
-        }catch(Exception ex){
+        } catch (Exception ex) {
             System.out.println(ex.getMessage());
             ex.printStackTrace();
         }
     }
-    
+
     public void selectAllJobListener() {
         this.selectAll = !this.selectAll;
         if (this.selectAll == false) {
             for (Todo t : this.list) {
                 t.setSelected(true);
             }
-        }else{
+        } else {
             for (Todo t : this.list) {
                 t.setSelected(false);
             }
         }
     }
     
+    public void onSelectJobListener(){
+        this.todo = this.oldTodo;
+    }
+
     public Date getMinDate() {
         return Calendar.getInstance().getTime();
+    }
+
+    public String getFilterBy() {
+        return filterBy;
+    }
+
+    public void setFilterBy(String filterBy) {
+        this.filterBy = filterBy;
     }
     
     public List<Todo> getList() {
@@ -119,7 +147,7 @@ public class TodoBean implements Serializable {
     public void setOldTodo(Todo oldTodo) {
         this.oldTodo = oldTodo;
     }
-    
+
     public boolean isSelectAll() {
         return selectAll;
     }

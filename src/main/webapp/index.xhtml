@@ -28,6 +28,13 @@
 
         <h:form id="viewAllJobForm">
             <p:panel style="border: none">
+                <h:outputText value="Filter By" style="float: left"/>
+                <p:selectOneMenu value="#{todoBean.filterBy}" style="width: 250px; float: none">
+                    <f:selectItem itemLabel="Job name" itemValue="1"/>
+                    <f:selectItem itemLabel="Job Description" itemValue="2"/>
+                </p:selectOneMenu>
+                <p:inputText value="" style="float: none"/>
+                
                 <p:commandButton value="Create New Job" onclick="PF('createTodoDlg').show();" style="float: right"/>
             </p:panel>
             <p:panel style="border: none; margin: auto">
@@ -72,7 +79,7 @@
                             </p:column>
                             <p:column width="10%">
                                 <p:panel style="border: none">
-                                    <p:commandButton  icon="fas fa-sync" update="updateTodoForm" onclick="PF('updateTodoDlg').show();">
+                                    <p:commandButton  icon="fas fa-sync" action="#{todoBean.onSelectJobListener}" update="updateTodoForm" onclick="PF('updateTodoDlg').show();">
                                         <f:setPropertyActionListener value="#{todo}" target="#{todoBean.oldTodo}"/>
                                     </p:commandButton>
                                 </p:panel>

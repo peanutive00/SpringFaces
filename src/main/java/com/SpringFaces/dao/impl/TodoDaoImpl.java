@@ -37,7 +37,7 @@ public class TodoDaoImpl implements TodoDao {
 
     @Override
     public void mergeTodo(Todo todo) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        this.sessionFactory.getCurrentSession().update(todo);
     }
 
     @Override
